@@ -5,3 +5,36 @@
   padding: 16px;
   font-family: system-ui, sans-serif;
 }
+.tidy-button {
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0;
+  border: none;
+  border-radius: 8px;
+  background: #6366f1;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.tidy-button:disabled {
+  background: #c7c7d1;
+  cursor: not-allowed;
+}
+.tidy-button:not(:disabled):active {
+  transform: scale(0.97);
+}
+.session-card {
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  background: #f4f4f8;
+  animation: card-in 0.25s ease-out;
+}
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.session-group { display: flex; justify-content: space-between; align-items: center; }
+.tab-badge { background: #6366f1; color: white; border-radius: 999px; padding: 2px 8px; font-size: 12px; }
+.session-actions { display: flex; gap: 8px; margin-top: 8px; }
