@@ -1,4 +1,5 @@
 import { handleGroup } from "./api/group";
+import { handleLicenseCheck } from "./api/licenseCheck";
 
 export interface Env {
   TABZEN_KV: KVNamespace;
@@ -15,6 +16,9 @@ export default {
     }
     if (url.pathname === "/api/group" && request.method === "POST") {
       return handleGroup(request, env);
+    }
+    if (url.pathname === "/api/license/check" && request.method === "POST") {
+      return handleLicenseCheck(request, env);
     }
     return new Response("not found", { status: 404 });
   },
