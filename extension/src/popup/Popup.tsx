@@ -1,15 +1,29 @@
+import { useState } from "react";
 import type { Session } from "../lib/types";
 
 export interface PopupProps {
   tabCount: number;
   sessions: Session[];
+  licenseStatus: "paid" | "free";
   onTidyUp: () => void;
   onRestore: (id: string) => void;
   onDelete: (id: string) => void;
+  onUpgrade: () => void;
+  onActivateLicense: (email: string) => void;
 }
 
-export function Popup({ tabCount, sessions, onTidyUp, onRestore, onDelete }: PopupProps) {
+export function Popup({
+  tabCount,
+  sessions,
+  licenseStatus,
+  onTidyUp,
+  onRestore,
+  onDelete,
+  onUpgrade,
+  onActivateLicense,
+}: PopupProps) {
   const canTidy = tabCount >= 2;
+  const [email, setEmail] = useState("");
 
   return (
     <div className="popup">
@@ -38,6 +52,21 @@ export function Popup({ tabCount, sessions, onTidyUp, onRestore, onDelete }: Pop
             </li>
           ))}
         </ul>
+      )}
+
+      {licenseStatus === "free" && (
+        <div className="upgrade-block">
+          <button className="upgrade-button" onClick={onUpgrade}>
+            Upgrade
+          </button>
+          <input
+            type="email"
+            placeholder="Activate with your checkout email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <button onClick={() => onActivateLicense(email)}>Activate</button>
+        </div>
       )}
     </div>
   );

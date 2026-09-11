@@ -32,4 +32,36 @@ describe("Popup", () => {
     fireEvent.click(screen.getByRole("button", { name: /delete/i }));
     expect(onDelete).toHaveBeenCalledWith("s1");
   });
+
+  it("shows an Upgrade button when free, and an email activation field", () => {
+    render(
+      <Popup
+        tabCount={3}
+        sessions={[]}
+        licenseStatus="free"
+        onTidyUp={vi.fn()}
+        onRestore={vi.fn()}
+        onDelete={vi.fn()}
+        onUpgrade={vi.fn()}
+        onActivateLicense={vi.fn()}
+      />
+    );
+    expect(screen.getByRole("button", { name: /upgrade/i })).toBeInTheDocument();
+  });
+
+  it("hides the Upgrade button when licenseStatus is paid", () => {
+    render(
+      <Popup
+        tabCount={3}
+        sessions={[]}
+        licenseStatus="paid"
+        onTidyUp={vi.fn()}
+        onRestore={vi.fn()}
+        onDelete={vi.fn()}
+        onUpgrade={vi.fn()}
+        onActivateLicense={vi.fn()}
+      />
+    );
+    expect(screen.queryByRole("button", { name: /upgrade/i })).not.toBeInTheDocument();
+  });
 });
