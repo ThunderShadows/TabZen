@@ -1,3 +1,5 @@
+import { handleGroup } from "./api/group";
+
 export interface Env {
   TABZEN_KV: KVNamespace;
   ANTHROPIC_API_KEY: string;
@@ -10,6 +12,9 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === "/health") {
       return new Response("ok");
+    }
+    if (url.pathname === "/api/group" && request.method === "POST") {
+      return handleGroup(request, env);
     }
     return new Response("not found", { status: 404 });
   },
