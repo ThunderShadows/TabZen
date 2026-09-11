@@ -1,0 +1,7 @@
+/* extension/src/popup/Popup.css */
+.popup {
+  width: 320px;
+  min-height: 200px;
+  padding: 16px;
+  font-family: system-ui, sans-serif;
+}
