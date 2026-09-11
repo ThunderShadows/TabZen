@@ -26,18 +26,20 @@ function makeEnv(): Env {
 const tabs = [{ title: "Vue docs", url: "https://vuejs.org" }];
 
 describe("handleGroup", () => {
-  const originalFetch = global.fetch;
   afterEach(() => {
-    global.fetch = originalFetch;
+    vi.unstubAllGlobals();
   });
 
   it("returns LLM-produced groups when the LLM call succeeds", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        content: [{ text: JSON.stringify({ groups: [{ name: "Frontend docs", tabs }] }) }],
-      }),
-    }) as any;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          content: [{ text: JSON.stringify({ groups: [{ name: "Frontend docs", tabs }] }) }],
+        }),
+      })
+    );
 
     const request = new Request("https://worker.test/api/group", {
       method: "POST",
@@ -50,7 +52,7 @@ describe("handleGroup", () => {
   });
 
   it("falls back to domain grouping when the LLM call fails", async () => {
-    global.fetch = vi.fn().mockRejectedValue(new Error("network error")) as any;
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("network error")));
 
     const request = new Request("https://worker.test/api/group", {
       method: "POST",
@@ -63,10 +65,13 @@ describe("handleGroup", () => {
   });
 
   it("returns a rate_limited error once the free-tier daily limit is hit", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ content: [{ text: JSON.stringify({ groups: [] }) }] }),
-    }) as any;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ content: [{ text: JSON.stringify({ groups: [] }) }] }),
+      })
+    );
 
     const env = makeEnv();
     const request = () =>
