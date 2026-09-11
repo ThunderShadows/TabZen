@@ -1,5 +1,7 @@
 import { handleGroup } from "./api/group";
 import { handleLicenseCheck } from "./api/licenseCheck";
+import { handleCreateCheckout } from "./api/createCheckout";
+import { handleStripeWebhook } from "./api/stripeWebhook";
 
 export interface Env {
   TABZEN_KV: KVNamespace;
@@ -19,6 +21,12 @@ export default {
     }
     if (url.pathname === "/api/license/check" && request.method === "POST") {
       return handleLicenseCheck(request, env);
+    }
+    if (url.pathname === "/api/create-checkout" && request.method === "POST") {
+      return handleCreateCheckout(request, env);
+    }
+    if (url.pathname === "/api/stripe-webhook" && request.method === "POST") {
+      return handleStripeWebhook(request, env);
     }
     return new Response("not found", { status: 404 });
   },

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getLicenseStatus, setLicensePaid } from "./license";
+import { getLicenseStatus, setLicensePaid, isEventProcessed, markEventProcessed } from "./license";
 
 function makeFakeKV() {
   const store = new Map<string, string>();
@@ -29,5 +29,14 @@ describe("license status", () => {
     const kv = makeFakeKV();
     await setLicensePaid(kv, "Buyer@Example.com");
     expect(await getLicenseStatus(kv, "buyer@example.com")).toBe("paid");
+  });
+});
+
+describe("webhook event dedupe", () => {
+  it("reports an event as unprocessed until marked", async () => {
+    const kv = makeFakeKV();
+    expect(await isEventProcessed(kv, "evt_1")).toBe(false);
+    await markEventProcessed(kv, "evt_1");
+    expect(await isEventProcessed(kv, "evt_1")).toBe(true);
   });
 });
